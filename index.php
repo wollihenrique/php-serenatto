@@ -1,39 +1,14 @@
 <?php
 
 require 'src/conexao.php';
-require 'src/Models/Produto.php';
+require 'src/Modelos/Produto.php';
+require 'src/Repositorios/RepositorioProdutos.php';
 
-$sql1 = "SELECT * FROM produtos WHERE tipo = 'Café' ORDER BY preco";
-$statement = $pdo->query($sql1);
-$cafesSerenatto = $statement->fetchAll(PDO::FETCH_ASSOC);
+//------------------------------------------------------------------------//
 
-$dadosCafe = array_map(function ($cafe){
-    return new Produto(
-        $cafe['id'],
-        $cafe['tipo'],
-        $cafe['nome'],
-        $cafe['descricao'],
-        $cafe['imagem'],
-        $cafe['preco'],
-    );
-}, $cafesSerenatto);
-
-//--------------------------------------------------------------------------//
-
-$sql2 = "SELECT * FROM produtos WHERE tipo = 'Almoço' ORDER BY preco";
-$statement = $pdo->query($sql2);
-$almocoSerenatto = $statement->fetchAll();
-
-$dadosAlmoco = array_map(function ($almoco){
-    return new Produto(
-        $almoco['id'],
-        $almoco['tipo'],
-        $almoco['nome'],
-        $almoco['descricao'],
-        $almoco['imagem'],
-        $almoco['preco'],
-    );
-}, $almocoSerenatto);
+$repositorio = new RepositorioProdutos($pdo);
+$dadosCafe = $repositorio->listaCafes();
+$dadosAlmoco = $repositorio->listaAlmoco();
 
 ?>
 <!doctype html>
