@@ -59,4 +59,12 @@ class RepositorioProdutos
 
         return $todosOsProdutos;
     }
+
+    public function deletar($id): void
+    {
+        $sql = "DELETE FROM produtos WHERE id = ?";
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue(1, $id);
+        $statement->execute();
+    }
 }
