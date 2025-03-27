@@ -16,8 +16,8 @@ class RepositorioProdutos
             $objeto['tipo'],
             $objeto['nome'],
             $objeto['descricao'],
-            $objeto['imagem'],
             $objeto['preco'],
+            $objeto['imagem'],
         );
     }
 
@@ -65,6 +65,18 @@ class RepositorioProdutos
         $sql = "DELETE FROM produtos WHERE id = ?";
         $statement = $this->pdo->prepare($sql);
         $statement->bindValue(1, $id);
+        $statement->execute();
+    }
+
+    public function salvar(Produto $produto)
+    {
+        $sql = "INSERT INTO produtos (tipo, nome, descricao, imagem, preco) VALUES (?,?,?,?,?);";
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue(1, $produto->getTipo());
+        $statement->bindValue(2, $produto->getNome());
+        $statement->bindValue(3, $produto->getDescricao());
+        $statement->bindValue(4, $produto->getImagem());
+        $statement->bindValue(5, $produto->getPreco());
         $statement->execute();
     }
 }
