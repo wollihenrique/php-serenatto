@@ -79,4 +79,43 @@ class RepositorioProdutos
         $statement->bindValue(5, $produto->getPreco());
         $statement->execute();
     }
+
+    public function buscar(int $id): Produto
+    {
+        $sql = "SELECT * FROM produtos WHERE id = ?;";
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue(1, $id);
+        $statement->execute();
+
+        $dados = $statement->fetch(PDO::FETCH_ASSOC);
+        return $this->formarObjeto($dados);
+    }
+
+    public function editar(Produto $produto): void
+    {
+        $sql = "UPDATE produtos SET tipo = :tipo, nome = :nome, descricao = :descr, imagem = :img, preco = :preco WHERE id = :id";
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue(":tipo", $produto->getTipo());
+        $statement->bindValue(":nome", $produto->getNome());
+        $statement->bindValue(":descr", $produto->getDescricao());
+        $statement->bindValue(":img", $produto->getImagem());
+        $statement->bindValue(":preco", $produto->getPreco());
+        $statement->bindValue(":id", $produto->getId());
+        $statement->execute();
+
+        if($produto->getImagem() !== 'logo-serenatto.png'){
+            
+            $this->atualizarFoto($produto);
+        }
+    }
+
+    private function atualizarFoto(Produto $produto)
+    {
+        $sql = "UPDATE produtos SET imagem = ? WHERE id = ?";
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue(1, $produto->getImagem());
+        $statement->bindValue(2, $produto->getId());
+        $statement->execute();
+    }
+    
 }
